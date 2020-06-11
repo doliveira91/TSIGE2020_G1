@@ -1,6 +1,4 @@
 'use strict"'
-
-// Map  objects
 //let map = L.map('map').setView([37.427, -4.406], 8);
 let map = L.map('map',{center:[ -34.8,-56.35],zoom:11});
 
@@ -23,3 +21,9 @@ let popup  = (feature, layer) => {
 let layer = L.geoJson(null, {
     onEachFeature: popup
 })
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer.addData(data);
+});
+
+layer.addTo(map);

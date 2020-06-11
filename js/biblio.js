@@ -1,7 +1,5 @@
 'use strict"'
 
-// Map  objects
-//let map = L.map('map').setView([37.427, -4.406], 8);
 let map = L.map('map',{center:[ -34.8,-56.35],zoom:11});
 
 // Base map layer
@@ -23,3 +21,11 @@ let popup  = (feature, layer) => {
 let layer = L.geoJson(null, {
     onEachFeature: popup
 })
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:bibliomun/items?f=application%2Fgeo%2Bjson&limit=50",(data) => {
+        layer.addData(data);
+    });
+         
+
+
+
+layer.addTo(map);
