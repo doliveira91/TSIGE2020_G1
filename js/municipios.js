@@ -1,6 +1,5 @@
 'use strict"'
 
-//let map = L.map('map').setView([37.427, -4.406], 8);
 let map = L.map('map',{center:[ -34.8,-56.35],zoom:11});
 // Base map layer
 let osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
