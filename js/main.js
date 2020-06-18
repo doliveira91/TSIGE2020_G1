@@ -7,6 +7,9 @@ let osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
 }).addTo(map);
 
+
+
+
 //Carga de la capa LUGARES HISTORICOS
 let popup_lh  = (feature, layer_lh) => {
     layer_lh.bindPopup(`<div>
@@ -34,6 +37,30 @@ $("#capa_lugares_historicos").click(function(event) {
 });
 
 //Carga de la capa MUNICIPIOS
+function getColor(d) {
+    return d == "A" ? '#BD0026' : 
+    d == "G"  ? '#E31A1C' : 
+    d == "D"  ? '#FC4E2A' : 
+    d == "F" ?  '#FD8D3C' : 
+    d == "E"  ? '#1e8449' : 
+    d == "CH"  ? '#FEB24C' : 
+    d == "B"  ? '#FEB24C' : 
+    d == "C"  ? '#800026' : 
+     '#FFEDA0'; 
+    }
+//funcion para agregar estilos a cada municipio
+function style(feature) { 
+    return { 
+    fillColor: getColor(
+    feature.properties.municipio), 
+    weight: 2, 
+    opacity: 1, 
+    color: 'white', 
+    dashArray: '3', 
+    fillOpacity: 0.7 
+    }; 
+}
+
 let popup_mun  = (feature, layer_mun) => {
     layer_mun.bindPopup(`<div>
                             <h6>Municipio: ${feature.properties.municipio}</h6>
@@ -42,7 +69,8 @@ let popup_mun  = (feature, layer_mun) => {
 };
 
 let layer_mun = L.geoJson(null, {
-    onEachFeature: popup_mun
+    onEachFeature: popup_mun,
+    style: style
 })
 
 $.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:sig_municipios/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
@@ -124,6 +152,7 @@ $.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:biblio
 });
 
 $("#capa_biblioteca").click(function(event) {
+
     event.preventDefault();
     if(map.hasLayer(layer_biblio)) {
         map.removeLayer(layer_biblio);
@@ -154,6 +183,9 @@ $("#capa_el").click(function(event) {
         map.removeLayer(layer_el);
         
     } else {
-        map.addLayer(layer_el)
-}
+        map.addLayer(layer_el);
+        
+    }
+    
 });
+
