@@ -73,6 +73,7 @@ let layer_mun = L.geoJson(null, {
     style: style
 })
 
+
 $.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:sig_municipios/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
     layer_mun.addData(data);
 });

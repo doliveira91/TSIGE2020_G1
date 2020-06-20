@@ -12,6 +12,27 @@
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	  
+	   <style>
+			body {
+				margin: 10;
+				padding: 10;
+			}
+			#map {
+			
+			position: static;
+			  width: 100%;
+			  height: 750px;
+			  top: 0; 
+			  bottom: 0;
+			}
+		</style>
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
 	</head>
 
 	<body id="page-top">
@@ -43,37 +64,128 @@
 							<h6>OGC API Features - Grupo 1 - Taller de Sistemas de Información Geográficos Empresariales</h6>
 						</div>
 					</nav>
+				
 
 					<div class="container-fluid">
 						<div class="card shadow mb-4">
 							<div class="card-header py-3">
-								<h6 class="m-0 font-weight-bold text-info">Consultas</h6>
+								<h6 class="m-0 font-weight-bold text-info">Municipios</h6>
 							</div>
-							<div class="card-body">
+							<div >
+								<a id="mun_a" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio A</span>
+								</a>
+								
+								<a id="mun_b" href="#" class="btn btn-light"> 
+									<span class="text"> </span>Municipio B</span>
+								</a>
+
+								<a id="mun_c" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio C</span>
+								</a>
+
+								<a id="mun_ch" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio CH</span>
+								</a>
+
+								<a id="mun_d" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio D</span>
+								</a>
+
+								<a id="mun_e" href="#" class="btn btn-light"> 
+									<span class="text"> </span>Municipio E</span>
+								</a>
+
+								<a id="mun_f" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio F</span>
+								</a>
+
+								<a id="mun_g" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio G</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="container-fluid">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-info">Lugares de interes</h6>
+							</div>
+							<div >
+								<a id="li_1" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio A</span>
+								</a>
+								
+								<a id="li_2" href="#" class="btn btn-light"> 
+									<span class="text"> </span>Municipio B</span>
+								</a>
+
+								<a id="li_3" href="#" class="btn btn-light"> 	
+									<span class="text"> </span>Municipio C</span>
+								</a>
+
+							
+							</div>
+						</div>
+					</div>
+					
+				
+                        
+					
+
+
+				
+					<div >
+						<div class="card shadow mb-4">
+
+							
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-info">Consultas</h6>
+							</div>	
+
+						
+
+							<ul class="nav nav-tabs nav-justified">
+								<div class="my-"></div>		
+								<a id="capa_municipios" href="#" class="btn btn-light"> 
+									
+								
+								</a>	
+							
+									
+								
 							
 								<div class="my-2"></div>
-								<a href="#" class="btn btn-light btn-icon-split" target="_blank">
-									<span class="icon text-gray-600">
-										<i class="fas fa-arrow-right"></i>
-									</span>
-									<span class="text">Capa 1</span>
+								<a id="capa_lugares_interes" href="#" class="btn btn-light" >
+									<span class="text">Lugares de interés</span>
+								</a>
+								<div class="my-2"></div>
+								<a id="capa_lugares_historicos" href="#" class="btn btn-light" >
+									<span class="text">Lugares historicos</span>
 								</a>	
 								<div class="my-2"></div>
-								<a href="#" class="btn btn-light btn-icon-split" target="_blank">
-									<span class="icon text-gray-600">
-										<i class="fas fa-arrow-right"></i>
-									</span>
-									<span class="text">Capa 2</span>
-								</a>
+								<a id="capa_bicicletas" href="#" class="btn btn-light" >	
+									<span class="text">Circuitos de bicicletas</span>
+								</a>	
 								<div class="my-2"></div>
-								<a href="#" class="btn btn-light btn-icon-split" target="_blank">
-									<span class="icon text-gray-600">
-										<i class="fas fa-arrow-right"></i>
-									</span>
-									<span class="text">Capa 3</span>
-								</a>
-								<div class="my-2"></div><br>
-							</div>
+								<a id="capa_biblioteca" href="#" class="btn btn-light" >
+									<span class="text">Bibliotecas</span>
+								</a>	
+								<div class="my-2"></div>
+								<a id="capa_el" href="#" class="btn btn-light" >
+									<span class="text">Espacios libres</span>
+								</a>	
+							</ul>
+						</div>
+						
+						
+						<div id='map'>
+							<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+							<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+  							<script src="../dist/leaflet.awesome-markers.js"></script>
+							<script src="js/mainConsultas.js"></script>
 						</div>
 					</div>
 				</div>
@@ -85,10 +197,12 @@
 					</div>
 				</footer>
 			</div>
+			
 		</div>
 		<a class="scroll-to-top rounded" href="#page-top">
 			<i class="fas fa-angle-up"></i>
 		</a>
+		
 		<script src="js/sb-admin-2.min.js"></script>
 	</body>
 </html>
