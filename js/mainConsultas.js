@@ -9,33 +9,6 @@ let osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 
-
-//Carga de la capa LUGARES HISTORICOS
-let popup_lh  = (feature, layer_lh) => {
-    layer_lh.bindPopup(`<div>
-                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.identifica}</p></h5>
-                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
-                        </div>`);
-};
-
-let layer_lh = L.geoJson(null, {
-    onEachFeature: popup_lh
-})
-
-$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:mh_bim/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
-    layer_lh.addData(data);
-});
-
-$("#capa_lugares_historicos").click(function(event) {
-    event.preventDefault();
-    if(map.hasLayer(layer_lh)) {
-        map.removeLayer(layer_lh);
-        
-    } else {
-        map.addLayer(layer_lh)
-}
-});
-
 //Carga de la capa MUNICIPIOS
 function getColor(d) {
     return d == "A" ? '#BD0026' : 
@@ -276,24 +249,43 @@ $("#mun_g").click(function(event) {
     }
 });
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Carga de la capa LUGARES DE INTERES
+function getColorLH(d) {
+    return d == "MONUMENTO HISTORICO" ? ' #eb128c' : 
+    d == "BIEN DE INTERES IMM"  ? '#16b533' :  
+     '#FFEDA0'; 
+    }
+//funcion para agregar estilos a cada municipio
+function styleLH(feature) { 
+    return { 
+    fillColor: getColorLH(
+    feature.properties.proteccion), 
+    weight: 2, 
+    opacity: 1, 
+    color: 'black', 
+    fillOpacity: 0.7 
+    }; 
+}
+
+//Carga de la capa LUGARES DE INTERES - lugares historicos
 let popup_li  = (feature, layer_li) => {
     layer_li.bindPopup(`<div>
-                            <h6><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> ${feature.properties.nombre}</p></h6>
+                            <h6><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> ${feature.properties.identifica}</p></h6>
                             <p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">Dirección: ${feature.properties.direccion}</p>;                           
                         </div>`);
 };
 
 let layer_li = L.geoJson(null, {
-    onEachFeature: popup_li
+    onEachFeature: popup_li,
+    style: styleLH
 })
 
-$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:mh_bim/items?limit=1000000&filter=proteccion%20%3D%20%27MONUMENTO%20HISTORICO%27&filter-lang=cql-text&additionalProp1=",(data) => {
     layer_li.addData(data);
 });
 
-$("#capa_lugares_interes").click(function(event) {
+$("#li_1").click(function(event) {
     event.preventDefault();
     if(map.hasLayer(layer_li)) {
         map.removeLayer(layer_li);
@@ -303,15 +295,60 @@ $("#capa_lugares_interes").click(function(event) {
 }
 });
 
+
+//Carga de la capa LUGARES DE INTERES - interes de IMM
+let popup_l2  = (feature, layer_l2) => {
+    layer_l2.bindPopup(`<div>
+                            <h6><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> ${feature.properties.identifica}</p></h6>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">Dirección: ${feature.properties.direccion}</p>;                           
+                        </div>`);
+};
+
+let layer_l2 = L.geoJson(null, {
+    onEachFeature: popup_l2,
+    style: styleLH
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:mh_bim/items?limit=1000000&filter=proteccion%20%3D%20%27BIEN%20DE%20INTERES%20IMM%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_l2.addData(data);
+});
+
+$("#li_2").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_l2)) {
+        map.removeLayer(layer_l2);
+        
+    } else {
+        map.addLayer(layer_l2)
+}
+});
+//////////////////////////////////////////////////////////////////
+
+
 //Carga de la capa CIRCUITOS DE BICIS
 
-let layer_bici = L.geoJson(null, {})
+function getColorBici(d) {
+    return d == "1.0" ? '#00ece2' : 
+    d == "2.0"  ? '#f7cd0d' :  
+     '#8f00f3'; 
+    }
+//funcion para agregar estilos a cada municipio
+function styleBici(feature) { 
+    return { 
+    color: getColorBici(
+    feature.properties.tipo), 
+    }; 
+}
 
-$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_bi_bicicircuitos/items?f=application%2Fgeo%2Bjson&",(data) => {
+let layer_bici = L.geoJson(null, {
+    style: styleBici
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_bi_bicicircuitos/items?limit=1000000&filter=tipo%20%3D%201.0&filter-lang=cql-text&additionalProp1=",(data) => {
     layer_bici.addData(data);
 });
 
-$("#capa_bicicletas").click(function(event) {
+$("#bici_1").click(function(event) {
     event.preventDefault();
     if(map.hasLayer(layer_bici)) {
         map.removeLayer(layer_bici);
@@ -322,60 +359,264 @@ $("#capa_bicicletas").click(function(event) {
 });
 
 
-
-//Carga de la capa BIBLIOTECA
-let popup_biblio  = (feature, layer_biblio) => {
-    layer_biblio.bindPopup(`<div>
-                                <h6><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> ${feature.properties.nombre}</p></h6>
-                                <p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> Dirección: ${feature.properties.direccion}<br>  
-                                Teléfono: ${feature.properties.telefono} <br>
-                                Tipo: ${feature.properties.tipo} </p> 
-                            </div>`);
-};
-
-let layer_biblio = L.geoJson(null, {
-    onEachFeature: popup_biblio
+let layer_bici2 = L.geoJson(null, {
+    style: styleBici
 })
 
-$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:bibliomun/items?f=application%2Fgeo%2Bjson&limit=50",(data) => {
-    layer_biblio.addData(data);
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_bi_bicicircuitos/items?limit=1000000&filter=tipo%20%3D%202.0&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_bici2.addData(data);
 });
 
-$("#capa_biblioteca").click(function(event) {
-
+$("#bici_2").click(function(event) {
     event.preventDefault();
-    if(map.hasLayer(layer_biblio)) {
-        map.removeLayer(layer_biblio);
+    if(map.hasLayer(layer_bici2)) {
+        map.removeLayer(layer_bici2);
         
     } else {
-        map.addLayer(layer_biblio)
+        map.addLayer(layer_bici2)
 }
 });
 
-//Carga de la capa ESPACIOS LIBRES
-let popup_libre  = (feature, layer_el) => {
-    layer_el.bindPopup(`<div>
-                            <h6><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; "> ${feature.properties.nom_parque}</p></h6
+
+let layer_bici3 = L.geoJson(null, {
+    style: styleBici
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_bi_bicicircuitos/items?limit=1000000&filter=tipo%20%3D%203.0&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_bici3.addData(data);
+});
+
+$("#bici_3").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_bici3)) {
+        map.removeLayer(layer_bici3);
+        
+    } else {
+        map.addLayer(layer_bici3)
+}
+});
+
+
+
+/////////////////////////////////////////////////////
+
+//Carga de la capa TEATROS
+let popup_cultura1  = (feature, layer_lh) => {
+    layer_lh.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
                         </div>`);
 };
 
-let layer_el = L.geoJson(null, {
-    onEachFeature: popup_libre
+let layer_cultura1 = L.geoJson(null, {
+    onEachFeature: popup_cultura1,
+    //style: styleCultura
 })
 
-$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_mdg_espacios_libres/items?f=application%2Fgeo%2Bjson&limit=50",(data) => {
-    layer_el.addData(data);
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25TEATRO%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cultura1.addData(data);
 });
 
-$("#capa_el").click(function(event) {
+$("#lugar_1").click(function(event) {
     event.preventDefault();
-    if(map.hasLayer(layer_el)) {
-        map.removeLayer(layer_el);
+    if(map.hasLayer(layer_cultura1)) {
+        map.removeLayer(layer_cultura1);
         
     } else {
-        map.addLayer(layer_el);
-        
-    }
-    
+        map.addLayer(layer_cultura1)
+}
 });
 
+
+//Carga de la capa CINE
+let popup_cultura2  = (feature, layer_cult2) => {
+    layer_cult2.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult2 = L.geoJson(null, {
+    onEachFeature: popup_cultura2,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25CINE%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult2.addData(data);
+});
+
+$("#lugar_2").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult2)) {
+        map.removeLayer(layer_cult2);
+        
+    } else {
+        map.addLayer(layer_cult2)
+}
+});
+
+
+
+//Carga de la capa museo
+let popup_cultura3  = (feature, layer_cult3) => {
+    layer_cult3.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult3 = L.geoJson(null, {
+    onEachFeature: popup_cultura3,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25MUSEO%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult3.addData(data);
+});
+
+$("#lugar_3").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult3)) {
+        map.removeLayer(layer_cult3);
+        
+    } else {
+        map.addLayer(layer_cult3)
+}
+});
+
+
+//Carga de la capa AUDITORIO
+let popup_cultura4  = (feature, layer_cult4) => {
+    layer_cult4.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult4 = L.geoJson(null, {
+    onEachFeature: popup_cultura4,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25AUDITORIO%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult4.addData(data);
+});
+
+$("#lugar_4").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult4)) {
+        map.removeLayer(layer_cult4);
+        
+    } else {
+        map.addLayer(layer_cult4)
+}
+});
+//Carga de la capa BIBLIOTECA
+let popup_cultura5  = (feature, layer_cult5) => {
+    layer_cult5.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult5 = L.geoJson(null, {
+    onEachFeature: popup_cultura5,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25BIBLIOTECA%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult5.addData(data);
+});
+
+$("#lugar_5").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult5)) {
+        map.removeLayer(layer_cult5);
+        
+    } else {
+        map.addLayer(layer_cult5)
+}
+});
+
+//Carga de la capa ESPACIO CULTURA
+let popup_cultura6  = (feature, layer_cult6) => {
+    layer_cult6.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult6 = L.geoJson(null, {
+    onEachFeature: popup_cultura6,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25ESPACIO%20CULTURA%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult6.addData(data);
+});
+
+$("#lugar_6").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult6)) {
+        map.removeLayer(layer_cult6);
+        
+    } else {
+        map.addLayer(layer_cult6)
+}
+});
+
+
+//Carga de la capa CINEMATECA
+let popup_cultura7  = (feature, layer_cult7) => {
+    layer_cult7.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult7 = L.geoJson(null, {
+    onEachFeature: popup_cultura7,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25CINEMATECA%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult7.addData(data);
+});
+
+$("#lugar_7").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult7)) {
+        map.removeLayer(layer_cult7);
+        
+    } else {
+        map.addLayer(layer_cult7)
+}
+});
+
+
+//Carga de la capa GRUPO CINE
+let popup_cultura8  = (feature, layer_cult8) => {
+    layer_cult8.bindPopup(`<div>
+                            <h5><p style="text-align:center; font-family: Arial, Helvetica, sans-serif; ">${feature.properties.nombre}</p></h5>
+                            <p style="text-align:center; font-family: Arial, Helvetica, sans-serif;">Dirección: ${feature.properties.direccion}</p>
+                        </div>`);
+};
+
+let layer_cult8 = L.geoJson(null, {
+    onEachFeature: popup_cultura8,
+  //  style: styleCultura
+})
+
+$.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:uptu_cultura/items?limit=1000000&filter=nombre%20LIKE%20%27%25GRUPOCINE%25%27&filter-lang=cql-text&additionalProp1=",(data) => {
+    layer_cult8.addData(data);
+});
+
+$("#lugar_8").click(function(event) {
+    event.preventDefault();
+    if(map.hasLayer(layer_cult8)) {
+        map.removeLayer(layer_cult8);
+        
+    } else {
+        map.addLayer(layer_cult8)
+}
+});

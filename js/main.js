@@ -9,6 +9,23 @@ let osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 
+function getColorLH(d) {
+    return d == "MONUMENTO HISTORICO" ? ' #eb128c' : 
+    d == "BIEN DE INTERES IMM"  ? '#16b533' :  
+     '#ec0000'; 
+    }
+//funcion para agregar estilos a cada municipio
+function styleLH(feature) { 
+    return { 
+    fillColor: getColorLH(
+    feature.properties.proteccion), 
+    weight: 2, 
+    opacity: 1, 
+    color: 'black', 
+    fillOpacity: 0.7 
+    }; 
+}
+
 
 //Carga de la capa LUGARES HISTORICOS
 let popup_lh  = (feature, layer_lh) => {
@@ -19,7 +36,8 @@ let popup_lh  = (feature, layer_lh) => {
 };
 
 let layer_lh = L.geoJson(null, {
-    onEachFeature: popup_lh
+    onEachFeature: popup_lh,
+    style: styleLH
 })
 
 $.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:mh_bim/items?f=application%2Fgeo%2Bjson&limit=1000000&filter-lang=cql-text&additionalProp1=",(data) => {
@@ -116,7 +134,27 @@ $("#capa_lugares_interes").click(function(event) {
 
 //Carga de la capa CIRCUITOS DE BICIS
 
-let layer_bici = L.geoJson(null, {})
+function getColorBici(d) {
+    return d == "1.0" ? '#00ece2' : 
+    d == "2.0"  ? '#f7cd0d' :  
+     '#8f00f3'; 
+    }
+//funcion para agregar estilos a cada municipio
+function styleBici(feature) { 
+    return { 
+    color: getColorBici(
+    feature.properties.tipo), 
+   /* weight: 2, 
+    opacity: 1, 
+    color: 'black', 
+    fillOpacity: 0.7*/ 
+    }; 
+}
+
+
+let layer_bici = L.geoJson(null, {
+    style: styleBici
+})
 
 $.getJSON("http://localhost:8080/geoserver/ogc/features/collections/tsige:v_bi_bicicircuitos/items?f=application%2Fgeo%2Bjson&",(data) => {
     layer_bici.addData(data);
